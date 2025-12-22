@@ -38,11 +38,11 @@ def extract_text_from_pdf(pdf_path):
     return text
 
 def remove_generic_patterns(text):
-    #remove page numbers
-    text = re.sub(r'\n\d+\n', '\n', text)  # Remove page numbers
-    text = re.sub(r'\n+\n', '\n', text)  # Remove extra newlines
-    text = re.sub(r'\s+', ' ', text)  # Remove extra spaces
-    text = re.sub(r'https?://\S+|www\.\S+','',text)  # Remove URLs
+    
+    text = re.sub(r'\n\d+\n', '\n', text)  #Remove page numbers
+    text = re.sub(r'\n+\n', '\n', text)  #Remove extra newlines
+    text = re.sub(r'\s+', ' ', text)  #Remove extra spaces
+    text = re.sub(r'https?://\S+|www\.\S+','',text)  #Remove URLs
     return text.strip()
 
 def remove_duplicate_sentences(text):
@@ -51,7 +51,8 @@ def remove_duplicate_sentences(text):
     return '. '.join(unique_sentences)
 
 def remove_special_characters(text):
-    text = re.sub(r'[^a-zA-Z0-9\s.,;:!?\'\"-]', '', text)  # Remove special characters
+    #Remove special characters
+    text = re.sub(r'[^a-zA-Z0-9\s.,;:!?\'\"-]', '', text)  
     return text
 
 #spacy model for advanced text processing
@@ -72,7 +73,7 @@ expander = pipeline(
 def make_descriptive_answer(question, context):
     res = distilbert_qa(question=question, context=context)
     answer_span = res["answer"]
-    # now ask the generator to elaborate
+    #now ask the generator to elaborate
     prompt = (
         f"Question: {question}\n"
         f"Answer: {answer_span}\n"
@@ -88,12 +89,12 @@ def make_descriptive_answer(question, context):
 def main(pdf_path):
     
     try:
-        # Question‑generation checkpoint
+        #Question‑generation checkpoint
         qg_ckpt      = "valhalla/t5-small-e2e-qg"
         qg_tokenizer = T5Tokenizer.from_pretrained(qg_ckpt)
         qg_model     = T5ForConditionalGeneration.from_pretrained(qg_ckpt).to(model.device)
 
-        # QA checkpoint
+        #QA checkpoint
         qa_ckpt      = "mrm8488/t5-small-finetuned-squadv2"
         qa_tokenizer = T5Tokenizer.from_pretrained(qa_ckpt)
         qa_model     = T5ForConditionalGeneration.from_pretrained(qa_ckpt).to(model.device)
@@ -110,8 +111,6 @@ def main(pdf_path):
             device=model.device,
         )
         
-
-        # 4) Your existing PDF→text→sentences pipeline
         text     = extract_text_from_pdf(pdf_path)
         cleaned  = remove_generic_patterns(text)
         cleaned  = remove_duplicate_sentences(cleaned)
@@ -140,7 +139,7 @@ def main(pdf_path):
             #chunks.append(" ".join(sentences[max(0,i-1):i+2]))
 
         
-         # 4) Rank by TF‑IDF and pick the top 5
+         #Rank by TF‑IDF and pick the top 5
         X        = TfidfVectorizer(stop_words="english").fit_transform(sentences)
         scores = X.sum(axis=1).A1
         top_idxs = scores.argsort()[::-1][:12]
@@ -152,12 +151,12 @@ def main(pdf_path):
             paragraphs.append(" ".join(sentences[start:end]))
         top_ctxs = paragraphs
 
-        # 5) Batch-generate 2 candidates per context, then pick the best via QA confidence
+        #Batch-generate 2 candidates per context, then pick the best via QA confidence
 
-        # a) Build prompts
+        #Build prompts
         prompts = [f"generate question: {ctx}" for ctx in top_ctxs]
 
-        # b) Do one pipeline() call for all contexts
+        #Do one pipeline() call for all contexts
         raw_outputs = qg_pipe(
             prompts,
             max_length=128,
@@ -171,7 +170,7 @@ def main(pdf_path):
             grouped = [ raw_outputs[i*2:(i+1)*2] for i in range(len(prompts)) ]
         else:
             grouped = raw_outputs
-        # c) For each context, choose the question with the highest distilbert_qa score
+        #For each context, choose the question with the highest distilbert_qa score
         selected_questions = []
         for idx, outputs in enumerate(grouped):
             best_q, best_score = None, -1.0
@@ -189,7 +188,7 @@ def main(pdf_path):
                 best_q = "What is the main idea of this paragraph?"
             selected_questions.append(best_q)
 
-        # d) Now generate the descriptive answers for each selected question
+        #Generate the descriptive answers for each selected question
         quiz = []
         for question, ctx in zip(selected_questions, top_ctxs):
             explanation = make_descriptive_answer(question, ctx)
@@ -198,7 +197,7 @@ def main(pdf_path):
                 "answer":   explanation
             })
 
-        # e) Finally, print your full quiz JSON
+        #Print your full quiz, JSON
         print(json.dumps({"quiz": quiz}))
         sys.exit(0)
 
@@ -216,3 +215,4 @@ if __name__ == "__main__":
         sys.exit(1)
     main(sys.argv[1])
     
+
