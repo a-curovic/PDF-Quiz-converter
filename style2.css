@@ -1,0 +1,243 @@
+/* Overall page styling */
+body {
+  background-color: rgba(2, 2, 151, 0.717);
+  color: white;
+  margin: 0;
+  font-family: sans-serif;
+}
+
+/* Header */
+h1 {
+  color: white;
+  text-align: center;
+  margin: 20px 0;
+}
+
+/* Main container: sidebar + rectangle panel */
+.container {
+  display: flex;
+  max-width: 700px;
+  margin: 0 auto;
+  align-items: flex-start;
+  gap: 0;
+}
+
+/* Sidebar styling */
+.sidebar {
+  flex: 0 0 120px;
+  background-color: rgba(5, 5, 210, 0.7);
+  border-left: 4px solid black;
+  border-top: 4px solid black;
+  border-bottom: 4px solid black;
+  padding: 20px;
+  box-sizing: border-box;
+
+  max-height: 400 px;
+  overflow-y: auto;
+}
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+.sidebar ul li {
+  margin-bottom: 20px;
+}
+.sidebar ul li a {
+  color: white;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+}
+
+/* Rectangle panel (upload form) */
+.rectangle {
+  flex: 1;
+  background-color: rgba(5, 5, 210, 0.7);
+  border: 4px solid black;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Upload form inside rectangle */
+.rectangle form {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.rectangle form input[type="file"],
+.rectangle form button {
+  font-size: 1.1rem;      /* larger text */
+  padding: 0.75rem 1.25rem; /* more tappable area */
+  margin: 0.5rem 0;        /* breathing room */
+}
+
+/* Quiz box styling */
+.quiz-box {
+  width: 100%;
+  max-width: 500px;
+  margin: 20px auto 0;
+  padding: 20px;
+  border: 3px solid black;
+  background-color: rgba(5, 5, 210, 0.7);
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+/* Space between questions */
+.quiz-box .question-block {
+  margin-bottom: 1.5rem;
+}
+
+/* Make the “Show Answer” summary feel clickable */
+.quiz-box details summary {
+  cursor: pointer;
+  margin-top: 5px;
+}
+
+
+/* Sign Up / Sign In Form Styles */
+.form-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: white;
+  text-align: center;
+}
+
+.input-group {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 1rem;
+  text-align: center;
+
+}
+
+.input-group i {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ccc;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  
+}
+
+.btn {
+  width: 100%;
+  max-width: 400px;
+  padding: 0.75rem;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+.or {
+  margin: 1rem 0;
+  color: #ddd;
+  text-align: center;
+}
+
+.links {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.links button,
+.links a {
+  background: none;
+  border: none;
+  color: #0af;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 0.9rem;
+  padding: 0;
+}
+
+.links button:hover,
+.links a:hover {
+  color: #fff;
+}
+
+
+/* Center the auth forms on the page */
+.fcontainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* fill the viewport height so justify-content can work */
+  min-height: 100vh;
+}
+
+/* Ensure the input groups and button stay a fixed width and are auto-centered */
+.fcontainer .input-group,
+.fcontainer .btn {
+  width: 100%;
+  max-width: 400px;
+  margin: 0.5rem auto;
+}
+.signout-button{
+  margin-top: 1rem;
+  text-align: center;
+  position: absolute;
+  right:40px;
+  top: 10px;
+  font-size: 0.9rem;
+  display: inline-block;
+  padding: 0.5em 1em;
+  background-color: #e74c3c;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: bold;
+}
+.signout-button:hover{
+  color: #fff;
+  text-decoration: underline;
+}
+
+.admin-page{
+  margin:2rem;
+  font-family: sans-serif;
+}
+
+.admin-page table{
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 1rem;
+}
+.admin-page th, .admin-page td{
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+.admin-page from.search{
+  margin-bottom: 1rem;
+}
+.admin-page .message{
+  padding: .5rem;
+  border: 1px solid #000000;
+  
+}
