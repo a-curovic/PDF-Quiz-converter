@@ -14,7 +14,7 @@ $quiz = [];
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['pdfInput'])) {
-    // 1. Validate & store upload
+    //Validate & store upload
     $fileInfo   = pathinfo($_FILES['pdfInput']['name']);
     $ext        = strtolower($fileInfo['extension']);
     if ($ext !== 'pdf') {
@@ -27,28 +27,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['pdfInput'])) {
         $storedName = uniqid('pdf_', true) . '.pdf';
         $targetPath = $uploadsDir . $storedName;
         if (move_uploaded_file($_FILES['pdfInput']['tmp_name'], $targetPath)) {
-            // 2. Call Python script
+            //Call Python script
             $escaped = escapeshellarg($targetPath);
-            // 1. Point to the Python interpreter on Windows—just "python" if it's on your PATH
-            $python = 'C:\\Users\\AlenC\\OneDrive\\Skrivbord\\Learning\\MachineLearning\\WebPdf2Quiz\\venvQuiz\\Scripts\\python.exe';  
-            // 2. Build the path to your script
+            //Point to the Python interpreter on Windows
+            $python = 'venvQuiz\\Scripts\\python.exe';  
+            //Build the path to the script
             $script = __DIR__ . DIRECTORY_SEPARATOR . 'pdf2quiz.py';
-            // 3. Quote everything properly
+            // Quote everything properly
             $cmd = "\"{$python}\" \"{$script}\" " . escapeshellarg($targetPath);
 
-            // 4. Run and capture both stdout & stderr
+            //Run and capture both stdout & stderr
             exec($cmd . " 2>&1", $outLines, $returnVar);
 
             $output = implode("\n", $outLines);
 
-            // 5. Dump for debugging
+            //Dump for debugging
             file_put_contents(__DIR__ . "/debug.txt",
                 "CMD: $cmd\n" .
                 "RC: $returnVar\n" .
                 "OUT:\n" . $output
             );
 
-            // 3. Decode JSON output
+            //Decode JSON output
             $data = json_decode(trim($output), true);
             if (json_last_error() === JSON_ERROR_NONE && isset($data['quiz'])) {
                 $quiz = $data['quiz'];
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['pdfInput'])) {
                     "INSERT INTO quizzes (user_id, title, questions) VALUES (?, ?, ?)"
                   );
                   $userId   = $_SESSION['user_id'];
-                  $title    = $_FILES['pdfInput']['name'];      // or whatever you prefer
+                  $title    = $_FILES['pdfInput']['name'];      
                   $jsonQs   = json_encode($quiz);
                   $stmt->bind_param("iss", $userId, $title, $jsonQs);
                   $stmt->execute();
@@ -81,16 +81,16 @@ $stmt = $conn->prepare(
   
   $displayQuiz = [];
   $pageTitle   = ""; 
-  // decide which quiz to display
+  //Decide which quiz to display
   if (!empty($_GET['quiz_id'])) {
       $displayId = (int)$_GET['quiz_id'];
   } 
   else {
-      // no quizzes yet
+      //No quizzes yet
       $displayId = null;
   }
   
-  // fetch that quiz’s data
+  //fetch that quiz’s data
   if ($displayId) {
       $stmt = $conn->prepare(
         "SELECT title, questions
@@ -176,4 +176,5 @@ $stmt = $conn->prepare(
 
       
 </body>
+
 </html>
