@@ -10,7 +10,7 @@ if (isset($_POST['signIn'])) {
     $email    = trim($_POST['email']);
     $password = $_POST['password'];
 
-    // 1) Fetch user by email
+    //Fetch user by email
     $stmt = $conn->prepare("SELECT id, password_hash, is_admin FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -20,7 +20,7 @@ if (isset($_POST['signIn'])) {
         $stmt->bind_result($userId, $pwHash,$isAdmin);
         $stmt->fetch();
 
-        // 2) Verify password
+        //Verify password
         if (password_verify($password, $pwHash)) {
             $_SESSION['user_id'] = $userId;
 	    $_SESSION['is_admin'] = (bool)$isAdmin;
@@ -35,3 +35,4 @@ if (isset($_POST['signIn'])) {
         echo "No user found with that email.";
     }
 }
+
