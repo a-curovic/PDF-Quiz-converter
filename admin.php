@@ -2,7 +2,7 @@
 session_start();
 include 'connect.php';
 
-// 1) Ensure only admins can see this page
+//Ensure only admins can see this page
 if (
   !isset($_SESSION['user_id']) ||
   empty($_SESSION['is_admin'])
@@ -11,7 +11,7 @@ if (
     exit();
 }
 
-// 2) Handle delete requests
+//Handle delete requests
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_user_id'])) {
     $delId = intval($_POST['delete_user_id']);
     // Because of ON DELETE CASCADE on quizzes.user_id, deleting the user alone will remove quizzes
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_user_id'])) {
     $message = "User (ID {$delId}) and all their quizzes have been deleted.";
 }
 
-// 3) Handle search
+//Handle search
 $search = "";
 if (!empty($_GET['search'])) {
     $search = trim($_GET['search']);
@@ -107,3 +107,4 @@ $users = $res->fetch_all(MYSQLI_ASSOC);
   </table>
 </body>
 </html>
+
